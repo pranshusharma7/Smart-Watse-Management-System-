@@ -1,324 +1,230 @@
-♻️ Smart Waste Management System
+<div align="center">
+
+# ♻️ Smart Waste Management System
+
+### 🌱 Smart Waste, Smarter Cities
+
+*A modern, frontend-focused smart-city platform to monitor waste collection, manage fleets, optimize routes, track bins, analyze data, and drive citizen engagement through gamification.*
+
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](#)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](#)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](#)
+[![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](#)
+[![Leaflet](https://img.shields.io/badge/Leaflet.js-199900?style=for-the-badge&logo=leaflet&logoColor=white)](#)
+[![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](#)
+
+![Status](https://img.shields.io/badge/status-active--development-brightgreen?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT%20(pending)-blue?style=flat-square)
+![Made with](https://img.shields.io/badge/made%20with-%E2%9D%A4%EF%B8%8F%20by%20Pranshu-red?style=flat-square)
+
+</div>
+
+---
+
+## 📌 Table of Contents
+
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Project Structure](#-project-structure)
+- [Tech Stack](#️-technologies-used)
+- [System Flow](#-system-flow)
+- [Getting Started](#-getting-started)
+- [Authentication & Backend](#-authentication--backend)
+- [Demo Data](#-current-demo-data)
+- [Future Roadmap](#-future-improvements)
+- [Security Recommendations](#-security-recommendations)
+- [Project Goals](#-project-goals)
+- [Vision](#-vision)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Author](#-author)
 
-Smart Waste, Smarter Cities 🌱
-A modern web-based Smart Waste Management System designed to help municipalities monitor waste collection, manage fleets, optimize routes, track bins, analyze collection data, educate citizens, and encourage sustainable behavior through rewards and gamification.
+---
+
+## 📌 Overview
 
-📌 Overview
+The **Smart Waste Management System (SWMS)** is a frontend-focused smart-city waste management platform with a modern dashboard interface — built to help municipalities cut collection costs, reduce redundant trips, and boost citizen participation in sustainable waste practices.
 
-The Smart Waste Management System (SWMS) is a frontend-focused smart-city waste management platform with a modern dashboard interface.
+<table>
+<tr>
+<td>📊 Waste collection analytics</td>
+<td>🗑️ Bin monitoring</td>
+<td>🚛 Fleet management</td>
+</tr>
+<tr>
+<td>🗺️ Route optimisation</td>
+<td>🔔 Notifications & alerts</td>
+<td>🤖 AI prediction interface</td>
+</tr>
+<tr>
+<td>🎮 Environmental awareness game</td>
+<td>💡 Waste-management awareness content</td>
+<td>🏆 Rewards & points management</td>
+</tr>
+<tr>
+<td>🔐 Login, signup, logout & password recovery</td>
+<td>🌙 Dark-mode support</td>
+<td>📱 Fully responsive UI</td>
+</tr>
+</table>
 
-The project combines:
+> The main dashboard, **"Smart Waste, Smarter Cities"**, is the command center — providing navigation to every module in the system.
 
-📊 Waste collection analytics
+---
 
-🗑️ Bin monitoring
+## ✨ Key Features
 
-🚛 Fleet management
+### 📊 Smart Dashboard
+The central hub for waste-management operations at a glance:
 
-🗺️ Route optimisation
+- Total waste collected
+- Active bins
+- Recent alerts
+- Fleet status
+- Collection analytics
+- Bin monitoring
 
-🔔 Notifications and alerts
+Includes interactive charts and map-based components for a real command-center feel.
 
-🤖 AI prediction interface
+### 🗑️ Bin Monitoring
+A live status view of every bin, color-coded by fill level:
 
-🎮 Environmental awareness game
+| Status | Meaning |
+|--------|---------|
+| 🟢 Empty / Low | Safe — no action needed |
+| 🟡 Half-filled | Monitor closely |
+| 🔴 Full / Critical | Needs immediate collection |
 
-💡 Waste-management awareness content
+*Currently simulates live updates for demonstration purposes.*
 
-🏆 Rewards & points management
+### 🚛 Fleet Management
+Manage every waste-collection vehicle from one interface:
 
-🔐 Login, signup, logout and password recovery
+- Truck number & driver name
+- Contact details
+- Live status & last known location
+- Capacity & last service date
+- Quick truck actions — including adding new trucks
 
-🌙 Dark-mode support
+### 🗺️ Route Optimisation
+A **Leaflet.js**-powered map interface for smarter collection planning:
 
-The main dashboard is titled "Smart Waste, Smarter Cities" and provides navigation to the different modules of the system.
+- Normal & satellite map views
+- Real-time bin tracking
+- Real-time truck tracking
 
-✨ Key Features
+### 📈 Collection Analytics
+Powered by **Chart.js**, with flexible timeframes:
 
-📊 Smart Dashboard
+`Week` → `Month` → `Year`
 
-The central dashboard provides an overview of waste-management operations, including:
+### 🔔 Notifications & Alerts
+A dedicated feed for recent waste-management alerts, with one-click clearing.
 
-Total waste collected
+### 🤖 AI Predictions
+**TensorFlow.js** is wired into the dashboard, laying the foundation for ML-based waste prediction features (bin overflow, demand forecasting, and more — see [roadmap](#-future-improvements)).
 
-Active bins
+### 🏆 Rewards & Points
+A municipality-facing panel to manage citizen incentives:
 
-Recent alerts
+- Citizen names & points
+- Rewards & progress tracking
+- Status & mark-issued actions
 
-Fleet status
+### 🎮 Eco Sorter Game
+*"Protect the Environment"* — a gamified waste-sorting challenge with `Go Green`, `Pause`, and `Restart` controls, designed to make segregation fun and educational.
 
-Collection analytics
+### 💡 Waste Management Awareness
+A timeline-style educational page covering:
 
-Bin monitoring
+- What waste management is & why it matters
+- Environmental and health impacts
+- Recycling best practices
 
-The dashboard also includes interactive charts and map-based components.
+Enhanced with embedded videos, floating visuals, and smooth animations.
 
-🗑️ Bin Monitoring
+### 🔐 Authentication
+Complete auth flow — login, signup, forgot-password, and logout — with session-based user info and a built-in offline/demo fallback so the dashboard always opens, even without a live backend.
 
-The system provides a bin-monitoring interface where fill levels can be displayed and categorized as:
+---
 
-Empty / Low
+## 🧩 Project Structure
 
-Half-filled
-
-Full / Critical
-
-The current frontend includes simulated live updates for demonstration purposes.
-
-🚛 Fleet Management
-
-The Fleet Management module provides an interface for managing waste-collection vehicles.
-
-It includes fields for:
-
-Truck number
-
-Driver name
-
-Contact
-
-Status
-
-Last location
-
-Capacity
-
-Last service
-
-Truck actions
-
-Users can also add trucks through the dashboard interface.
-
-🗺️ Route Optimisation
-
-The Route Optimisation module provides a map-based interface for waste-collection planning.
-
-It includes controls for:
-
-Normal map
-
-Satellite map
-
-Bin tracking
-
-Truck tracking
-
-The project uses Leaflet for interactive map functionality.
-
-📈 Collection Analytics
-
-The dashboard contains waste-collection analytics with selectable:
-
-Week
-
-Month
-
-Year
-
-The project uses Chart.js for data visualization.
-
-🔔 Notifications & Alerts
-
-The dashboard includes a notification system for recent waste-management alerts.
-
-Alerts can be cleared from the interface.
-
-🤖 AI Predictions
-
-The dashboard includes an AI Predictions module in the navigation structure and loads TensorFlow.js on the main dashboard, providing a foundation for adding machine-learning-based waste prediction features.
-
-🏆 Rewards & Points
-
-The Rewards & Points module provides a municipality-oriented interface for managing citizen rewards.
-
-It includes:
-
-Citizen names
-
-Points
-
-Rewards
-
-Progress
-
-Status
-
-Mark-Issued actions
-
-🎮 Eco Sorter Game
-
-The project includes an environmental gamification module called Eco Sorter — Protect the Environment.
-
-The game allows users to interact with waste-sorting mechanics and provides controls such as:
-
-Go Green
-
-Pause
-
-Restart
-
-This module is intended to make waste segregation more engaging and educational.
-
-💡 Waste Management Awareness
-
-The Awareness section provides educational content about:
-
-What waste management is
-
-Why waste management is important
-
-Environmental and health impacts
-
-Waste management and recycling
-
-The page uses a timeline-style presentation, embedded educational videos, floating visual elements, and animation effects.
-
-🔐 Authentication
-
-The project contains:
-
-Login page
-
-Signup page
-
-Forgot-password page
-
-Logout functionality
-
-Session-based user information
-
-The login JavaScript attempts to communicate with a backend API using:
-
-POST /api/auth/login
-
-and logout uses:
-
-POST /api/auth/logout
-
-The frontend also includes an offline/demo fallback login so the dashboard can still be opened when the API is unavailable.
-
-🧩 Project Structure
-
+```
 Smart-Waste-Management-System/
 │
-├── index.html
-├── index1.html
-├── signup.html
-├── forgotpass.html
+├── 🔐 index.html                     → Login page
+├── 📊 index1.html                    → Main Smart Waste dashboard
+├── 📝 signup.html                    → Account registration
+├── 🔑 forgotpass.html                → Password recovery
 │
-├── route.html
-├── fleetmanagement.html
-├── fleetmanagement1.html
-├── rewardsandpoints.html
-├── protect_environment_game.html
-├── awarness.html
+├── 🗺️ route.html                     → Route optimisation & map interface
+├── 🚛 fleetmanagement.html           → Fleet management interface
+├── 🚛 fleetmanagement1.html          → Alternate fleet dashboard
+├── 🏆 rewardsandpoints.html          → Rewards & points administration
+├── 🎮 protect_environment_game.html  → Waste-sorting educational game
+├── 💡 awarness.html                  → Waste-management awareness page
 │
-├── style.css
-├── style1.css
-├── awarness.css
+├── 🎨 style.css                      → Authentication / general styling
+├── 🎨 style1.css                     → Main dashboard styling
+├── 🎨 awarness.css                   → Awareness-page styling
 │
-├── script.js
-├── script1.js
-└── awarness.js
+├── ⚙️ script.js                      → Authentication & shared utilities
+├── ⚙️ script1.js                     → Dashboard, monitoring, analytics & maps
+└── ⚙️ awarness.js                    → Awareness-page animation & interaction
+```
 
-Main Files
+<details>
+<summary><b>📁 File Purpose Reference (click to expand)</b></summary>
 
-File
+| File | Purpose |
+|------|---------|
+| `index.html` | Login page |
+| `index1.html` | Main Smart Waste dashboard |
+| `signup.html` | Account registration interface |
+| `forgotpass.html` | Password recovery interface |
+| `route.html` | Route optimisation and map interface |
+| `fleetmanagement.html` | Fleet management interface |
+| `fleetmanagement1.html` | Alternate fleet dashboard |
+| `rewardsandpoints.html` | Rewards and points administration |
+| `protect_environment_game.html` | Waste-sorting educational game |
+| `awarness.html` | Waste-management awareness page |
+| `style.css` | Authentication/general styling |
+| `style1.css` | Main dashboard styling |
+| `awarness.css` | Awareness-page styling |
+| `script.js` | Authentication and shared utilities |
+| `script1.js` | Dashboard interactions, monitoring, analytics and maps |
+| `awarness.js` | Awareness-page animation and interaction |
 
-Purpose
+</details>
 
-index.html
+---
 
-Login page
+## 🛠️ Technologies Used
 
-index1.html
+**Frontend**
 
-Main Smart Waste dashboard
+![HTML5](https://img.shields.io/badge/-HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/-CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Responsive](https://img.shields.io/badge/-Responsive%20Design-4CAF50?style=flat-square)
 
-signup.html
+**Libraries & APIs**
 
-Account registration interface
+| Library | Purpose |
+|---------|---------|
+| 📊 **Chart.js** | Analytics and charts |
+| 🗺️ **Leaflet.js** | Interactive maps |
+| 🔥 **Leaflet Heat** | Heatmap support |
+| 🤖 **TensorFlow.js** | AI/ML foundation |
+| 🎨 **Font Awesome** | Icons |
+| 🔤 **Google Fonts** | Poppins & Inter |
 
-forgotpass.html
+---
 
-Password recovery interface
+## 🔄 System Flow
 
-route.html
-
-Route optimisation and map interface
-
-fleetmanagement.html
-
-Fleet management interface
-
-fleetmanagement1.html
-
-Alternate fleet dashboard
-
-rewardsandpoints.html
-
-Rewards and points administration
-
-protect_environment_game.html
-
-Waste-sorting educational game
-
-awarness.html
-
-Waste-management awareness page
-
-style.css
-
-Authentication/general styling
-
-style1.css
-
-Main dashboard styling
-
-awarness.css
-
-Awareness-page styling
-
-script.js
-
-Authentication and shared utilities
-
-script1.js
-
-Dashboard interactions, monitoring, analytics and maps
-
-awarness.js
-
-Awareness-page animation and interaction
-
-🛠️ Technologies Used
-
-Frontend
-
-HTML5
-
-CSS3
-
-JavaScript
-
-Responsive Web Design
-
-Libraries & APIs
-
-Chart.js — analytics and charts
-
-Leaflet.js — interactive maps
-
-Leaflet Heat — heatmap support
-
-TensorFlow.js — AI/ML foundation
-
-Font Awesome — icons
-
-Google Fonts — Poppins and Inter
-
-🔄 System Flow
-
+```
                  ┌─────────────────────┐
                  │      Login Page     │
                  └──────────┬──────────┘
@@ -348,209 +254,213 @@ Google Fonts — Poppins and Inter
                             │
                             ▼
                     Eco Sorter Game
+```
 
-🚀 Getting Started
+---
 
-1. Clone the repository
+## 🚀 Getting Started
 
+### 1️⃣ Clone the repository
+
+```bash
 git clone https://github.com/YOUR-USERNAME/smart-waste-management-system.git
+```
 
-2. Open the project
+### 2️⃣ Open the project
 
+```bash
 cd smart-waste-management-system
+```
 
-3. Run the frontend
+### 3️⃣ Run the frontend
 
-You can open index.html directly in a browser.
+You can open `index.html` directly in a browser, **or** for a smoother dev experience, use a local server such as VS Code Live Server:
 
-For a better development experience, use a local server such as VS Code Live Server.
+```
+Open index.html → Right-click → "Open with Live Server"
+```
 
-Example:
+Then visit the local URL shown by your development server. 🎉
 
-Open index.html → Start Live Server
+---
 
-Then open the local URL shown by your development server.
+## 🔑 Authentication & Backend
 
-🔑 Authentication & Backend
+The frontend is fully prepared to communicate with a backend authentication API.
 
-The frontend is prepared to communicate with a backend authentication API.
-
-Login
-
+**Login**
+```http
 POST /api/auth/login
 Content-Type: application/json
-
-Example request:
 
 {
   "email": "user@example.com",
   "password": "your-password"
 }
+```
 
-Logout
-
+**Logout**
+```http
 POST /api/auth/logout
+```
 
-The frontend sends credentials with the API request and stores non-sensitive user information in sessionStorage.
+Credentials are sent with the API request, and non-sensitive user info is stored in `sessionStorage`.
 
-⚠️ The current project also contains an offline/demo fallback login. For production deployment, connect the authentication flow to a properly secured backend and remove demo authentication behavior.
+> ⚠️ **Note:** The project currently includes an offline/demo fallback login for easy testing. For production, connect to a properly secured backend and remove demo authentication behavior.
 
-📊 Current Demo Data
+---
 
-Some dashboard information is currently implemented as frontend/demo data.
+## 📊 Current Demo Data
 
-For example, bin fill levels can be simulated and updated periodically, while analytics can display sample collection data.
+Some dashboard data is currently frontend/demo data — bin fill levels are simulated, and analytics show sample collection data.
 
-For a production-ready system, these values should be replaced with data received from:
+For a production-ready system, this pipeline should be wired up:
 
-IoT Sensors
-     ↓
-Backend API
-     ↓
-Database
-     ↓
-Smart Waste Dashboard
+```
+IoT Sensors → Backend API → Database → Smart Waste Dashboard
+```
 
-🔮 Future Improvements
+---
 
-The project can be extended into a complete IoT + AI smart-city platform.
+## 🔮 Future Improvements
 
-🤖 AI & Machine Learning
+<table>
+<tr><th>🤖 AI & Machine Learning</th><th>📡 IoT Integration</th></tr>
+<tr>
+<td>
 
-Predict bin overflow before it happens
+- Predict bin overflow before it happens
+- Predict daily waste generation
+- Predict collection demand
+- Detect abnormal waste patterns
+- Optimize collection schedules
 
-Predict daily waste generation
+</td>
+<td>
 
-Predict collection demand
+- Ultrasonic fill-level sensors
+- GPS modules
+- Weight sensors
+- Temperature sensors
+- Gas sensors
 
-Detect abnormal waste patterns
+</td>
+</tr>
+<tr><th>🗺️ Advanced Route Optimisation</th><th>📱 Citizen Application</th></tr>
+<tr>
+<td>
 
-Optimize collection schedules
+- Dijkstra's Algorithm
+- A* Search
+- Genetic Algorithm
+- Vehicle Routing Problem (VRP)
+- Dynamic route optimization
 
-📡 IoT Integration
+</td>
+<td>
 
-Connect real smart bins using:
+- Report overflowing bins
+- Request waste pickup
+- View collection schedules
+- Earn reward points
+- Learn waste segregation
 
-Ultrasonic fill-level sensors
+</td>
+</tr>
+</table>
 
-GPS modules
+### 🏙️ Smart City Integration Vision
 
-Weight sensors
+```
+Smart Bins → IoT Gateway → Backend / Cloud → AI Prediction Engine
+    → Route Optimisation → Collection Fleet → Municipality Dashboard
+```
 
-Temperature sensors
+---
 
-Gas sensors
+## 🔒 Security Recommendations
 
-🗺️ Advanced Route Optimisation
+> Before deploying to production, make sure to:
 
-Implement algorithms such as:
+- ✅ Use HTTPS everywhere
+- ✅ Store authentication securely
+- ✅ Keep tokens in secure, appropriate cookies
+- ✅ Validate all backend inputs
+- ✅ Hash passwords on the server
+- ✅ Add role-based access control (RBAC)
+- ✅ Protect all API endpoints
+- ✅ Add rate limiting
+- ❌ Never store passwords in frontend code
+- ❌ Replace demo/mock authentication with real backend authentication
 
-Dijkstra
+---
 
-A*
+## 🎯 Project Goals
 
-Genetic Algorithm
+- 🚛 Improve waste-collection efficiency
+- 📉 Reduce unnecessary collection trips
+- 🗑️ Monitor waste-bin conditions
+- 🚚 Support better fleet management
+- 🗺️ Improve route planning
+- 📊 Provide useful operational analytics
+- ♻️ Encourage waste segregation and recycling
+- 📢 Increase citizen awareness
+- 🤖 Use AI and IoT for smarter waste management
+- 🏙️ Support the development of cleaner, smarter cities
 
-Vehicle Routing Problem (VRP)
+---
 
-Dynamic route optimization
+## 🌱 Vision
 
-📱 Citizen Application
+<div align="center">
 
-Add a citizen-facing application for:
+### *"Smart Waste, Smarter Cities."*
 
-Reporting overflowing bins
+The long-term vision is to build an intelligent waste-management ecosystem where **IoT sensors, AI predictions, route optimisation, fleet tracking, analytics, and citizen participation** work together to make urban waste collection more efficient, sustainable, and environmentally responsible.
 
-Requesting waste pickup
+</div>
 
-Viewing collection schedules
+---
 
-Earning reward points
+## 🤝 Contributing
 
-Learning waste segregation
+Contributions are always welcome! Here's the workflow:
 
-🏙️ Smart City Integration
+```bash
+# 1. Create a feature branch
+git checkout -b feature/your-feature
 
-Future versions can integrate:
+# 2. Make your changes, then commit
+git add .
+git commit -m "Add your feature"
 
-Smart Bins
-     ↓
-IoT Gateway
-     ↓
-Backend / Cloud
-     ↓
-AI Prediction Engine
-     ↓
-Route Optimisation
-     ↓
-Collection Fleet
-     ↓
-Municipality Dashboard
+# 3. Push and open a Pull Request
+git push origin feature/your-feature
+```
 
-🔒 Security Recommendations
+Then open a **Pull Request** on GitHub. 🚀
 
-Before using the project in production:
+---
 
-Use HTTPS
+## 📄 License
 
-Store authentication securely
+This project is currently intended for **educational, prototype, and hackathon development**.
 
-Keep authentication tokens in secure, appropriate cookies
+> Add an appropriate open-source license (e.g. MIT License) before publishing for broader reuse.
 
-Validate all backend inputs
+---
 
-Hash passwords on the server
+## 👨‍💻 Author
 
-Add role-based access control
+<div align="center">
 
-Protect API endpoints
+### **PRANSHU**
 
-Add rate limiting
+Built with 💚 using HTML, CSS, JavaScript and modern web technologies.
 
-Never store passwords in frontend code
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pranshusharma7)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/pranshu-kumar-6742a4323)
 
-Replace demo/mock authentication with real backend authentication
+⭐ *If you found this project interesting, consider giving it a star!*
 
-🎯 Project Goals
-
-The main goals of the Smart Waste Management System are to:
-
-Improve waste-collection efficiency.
-
-Reduce unnecessary collection trips.
-
-Monitor waste-bin conditions.
-
-Support better fleet management.
-
-Improve route planning.
-
-Provide useful operational analytics.
-
-Encourage waste segregation and recycling.
-
-Increase citizen awareness.
-
-Use AI and IoT for smarter waste management.
-
-Support the development of cleaner and smarter cities.
-
-🌱 Vision
-
-"Smart Waste, Smarter Cities."
-
-The long-term vision is to build an intelligent waste-management ecosystem where IoT sensors, AI predictions, route optimisation, fleet tracking, analytics, and citizen participation work together to make urban waste collection more efficient, sustainable, and environmentally responsible.
-
-
-📄 License
-
-This project is currently intended for educational, prototype, and hackathon development.
-
-Add an appropriate open-source license such as MIT License before publishing the project for broader reuse.
-
-👨‍💻 Author
-
-PRANSHU
-
-Smart Waste Management System
-Built with HTML, CSS, JavaScript and modern web technologies.
+</div>
