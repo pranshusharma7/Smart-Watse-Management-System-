@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eco Sorter — Protect the Environment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1:#071422;
+      --bg-2:#0b2833;
+      --card:rgba(255,255,255,0.04);
+      --muted:#9fb3bf;
+      --accent:#22c55e;
+      --danger:#ef4444;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.02);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#e6eef6;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));}
+    .wrap{max-width:1100px;margin:28px auto;padding:20px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);box-shadow:0 12px 40px rgba(0,0,0,0.5);}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{margin:0;font-size:20px;color:var(--accent);}
+    .controls{display:flex;gap:8px}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;color:#e6eef6;font-weight:600;cursor:pointer;transition:all .18s;}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.35);}
+
+    .hud{display:flex;gap:12px;align-items:center;margin-top:12px}
+    .panel{background:var(--card);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-weight:700}
+    .score{color:#bde7c6;font-size:18px}
+
+    .game-area{position:relative;height:560px;margin-top:14px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg,#053140,#062628);}
+    .sky{position:absolute;inset:0;pointer-events:none}
+
+    .ground{position:absolute;left:0;right:0;bottom:0;height:140px;background:linear-gradient(180deg,#082117,#04130c);border-top:6px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+    .ground .left{text-align:left;color:var(--muted)}
+
+    /* Player bin */
+    #playerBin{position:absolute;bottom:160px;left:50%;transform:translateX(-50%);width:140px;height:110px;border-radius:14px;background:linear-gradient(180deg,#14532d,#0b3b24);color:white;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 12px 30px rgba(0,0,0,0.6);cursor:grab;z-index:40}
+    #playerBin.dragging{cursor:grabbing}
+    #playerBin .type{font-weight:800}
+    #playerBin .label{font-size:13px;color:var(--muted);margin-top:6px}
+
+    /* small bin selector */
+    .bin-select{display:flex;gap:8px;align-items:center}
+    .bin-btn{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--glass-2);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .bin-btn.active{outline:3px solid rgba(34,197,94,0.12);transform:translateY(-6px)}
+
+    /* falling items */
+    .item{position:absolute;width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#072022;font-weight:700;z-index:30;box-shadow:0 10px 20px rgba(0,0,0,0.35)}
+    .item.trash{background:#fef08a}
+    .item.recycle{background:#86efac}
+    .item.organic{background:#ffd8a8}
+    .item.hazard{background:#ffb4c6}
+
+    /* overlays */
+    .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;pointer-events:none}
+    .paused{background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.8));color:var(--muted);font-size:24px}
+
+    .info{display:flex;align-items:center;gap:12px;margin-top:12px;color:var(--muted);font-size:14px}
+
+    .progress{height:8px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;width:220px}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,#34d399,#10b981);width:0%}
+
+    /* responsive */
+    @media(max-width:700px){
+      .wrap{padding:12px}
+      #playerBin{width:110px;height:88px}
+      .game-area{height:480px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🌱 Eco Sorter — Protect the Environment</h1>
+      <div class="controls">
+        <button id="startBtn" class="btn">Go Green</button>
+        <button id="pauseBtn" class="btn">Pause</button>
+        <button id="restartBtn" class="btn">Restart</button>
+      </div>
+    </header>
+
+    <div class="hud">
+      <div class="panel">Score: <span id="score" class="score">0</span></div>
+      <div class="panel">Lives: <span id="lives">3</span></div>
+      <div class="panel">Level: <span id="level">1</span></div>
+      <div style="flex:1"></div>
+      <div class="panel" style="display:flex;gap:8px;align-items:center">High Score: <strong id="highScore" style="margin-left:8px;color:#fff"></strong></div>
+    </div>
+
+    <div class="game-area" id="gameArea">
+      <div class="sky" id="sky"></div>
+
+      <!-- player bin (movable) -->
+      <div id="playerBin" role="button" tabindex="0">
+        <div class="type">♻ Recycle</div>
+        <div class="label">Tap 1/2/3 or click icons to change</div>
+      </div>
+
+      <!-- ground with small selectors -->
+      <div class="ground">
+        <div class="left">
+          <div style="font-weight:800">Keep the city clean — Sort correctly!</div>
+          <div style="font-size:13px;color:var(--muted)">Use ← → or drag the bin. Press 1:General 2:Recycle 3:Organic</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="bin-select">
+            <div class="bin-btn" data-type="trash" id="btnTrash">🗑</div>
+            <div class="bin-btn active" data-type="recycle" id="btnRecycle">♻</div>
+            <div class="bin-btn" data-type="organic" id="btnOrganic">🍃</div>
+          </div>
+          <div style="width:12px"></div>
+          <div class="progress" title="progress to next level"><i id="progressBar"></i></div>
+        </div>
+      </div>
+
+      <div id="pausedOverlay" class="overlay" style="display:none;pointer-events:auto"><div class="paused">Paused</div></div>
+      <div id="gameOverOverlay" class="overlay" style="display:none;pointer-events:auto"></div>
+    </div>
+
+    <div class="info">
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:14px;height:14px;background:#fef08a;border-radius:3px"></div> Trash
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:14px;height:14px;background:#86efac;border-radius:3px"></div> Recycle
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:14px;height:14px;background:#ffd8a8;border-radius:3px"></div> Organic
+      </div>
+      <div style="display:flex;flex:1"></div>
+      <div style="color:var(--muted)">Tip: Recyclables give more points. Avoid hazards.</div>
+    </div>
+  </div>
+
+  <script>
+    // Eco Sorter - corrected & enhanced
+    (function(){
+      // elements
+      const gameArea = document.getElementById('gameArea');
+      const sky = document.getElementById('sky');
+      const playerBin = document.getElementById('playerBin');
+      const startBtn = document.getElementById('startBtn');
+      const pauseBtn = document.getElementById('pauseBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const scoreEl = document.getElementById('score');
+      const livesEl = document.getElementById('lives');
+      const levelEl = document.getElementById('level');
+      const progressBar = document.getElementById('progressBar');
+      const pausedOverlay = document.getElementById('pausedOverlay');
+      const gameOverOverlay = document.getElementById('gameOverOverlay');
+      const highScoreEl = document.getElementById('highScore');
+
+      const binButtons = Array.from(document.querySelectorAll('.bin-btn'));
+
+      let rect = gameArea.getBoundingClientRect();
+      let width = rect.width, height = rect.height;
+
+      // game state
+      const state = {
+        running:false,
+        paused:false,
+        score:0,
+        lives:3,
+        level:1,
+        speed:1,
+        spawnRate:1400,
+        items:[],
+        lastSpawn:0,
+        lastFrame:0,
+        playerX:0,
+        playerType:'recycle', // current selected type
+        highScore: Number(localStorage.getItem('ecoHighScore') || 0),
+      };
+
+      highScoreEl.textContent = state.highScore;
+
+      const types = [
+        {key:'trash',emoji:'🗑',bin:'trash',points:8},
+        {key:'recycle',emoji:'♻',bin:'recycle',points:30},
+        {key:'organic',emoji:'🍃',bin:'organic',points:12},
+        {key:'hazard',emoji:'⚠',bin:'none',points:-20}
+      ];
+
+      // movement config
+      const move = {left:false, right:false, speed:420}; // px per sec
+
+      function onResize(){
+        rect = gameArea.getBoundingClientRect(); width = rect.width; height = rect.height;
+        // ensure player inside
+        if(!playerBin.style.left) playerBin.style.left = (width/2 - playerBin.offsetWidth/2)+'px';
+        state.playerX = parseFloat(playerBin.style.left) || (width/2 - playerBin.offsetWidth/2);
+      }
+      window.addEventListener('resize', onResize);
+
+      function setPlayerType(t){ state.playerType = t; // update UI
+        playerBin.querySelector('.type').textContent = (t==='recycle'?'♻ Recycle': (t==='organic'?'🍃 Organic':'🗑 General'));
+        // highlight buttons
+        binButtons.forEach(b=> b.classList.toggle('active', b.dataset.type===t));
+      }
+
+      // initialize bin buttons
+      binButtons.forEach(btn=>{
+        btn.addEventListener('click', ()=> setPlayerType(btn.dataset.type));
+      });
+
+      // keyboard controls
+      window.addEventListener('keydown', e=>{
+        if(e.key==='ArrowLeft') move.left = true;
+        if(e.key==='ArrowRight') move.right = true;
+        if(e.key==='1') setPlayerType('trash');
+        if(e.key==='2') setPlayerType('recycle');
+        if(e.key==='3') setPlayerType('organic');
+        if(e.key===' '){ e.preventDefault(); togglePause(); }
+      });
+      window.addEventListener('keyup', e=>{ if(e.key==='ArrowLeft') move.left=false; if(e.key==='ArrowRight') move.right=false });
+
+      // pointer drag for player bin
+      let dragging = false, dragOffset = 0;
+      playerBin.addEventListener('pointerdown', e=>{ dragging=true; playerBin.setPointerCapture(e.pointerId); dragOffset = e.clientX - playerBin.getBoundingClientRect().left; playerBin.classList.add('dragging'); });
+      window.addEventListener('pointermove', e=>{ if(!dragging) return; const x = e.clientX - rect.left - dragOffset; state.playerX = clamp(x, 8, width - playerBin.offsetWidth - 8); playerBin.style.left = state.playerX + 'px'; });
+      window.addEventListener('pointerup', e=>{ dragging=false; playerBin.classList.remove('dragging'); });
+
+      // buttons
+      startBtn.addEventListener('click', ()=>{ if(!state.running) startGame(); else if(state.paused) resumeGame(); });
+      pauseBtn.addEventListener('click', togglePause);
+      restartBtn.addEventListener('click', ()=>{ resetGame(); startGame(); });
+
+      function startGame(){ onResize(); resetGame(); state.running=true; state.paused=false; state.lastFrame = performance.now(); state.lastSpawn = performance.now(); startBtn.textContent='Running'; pauseBtn.textContent='Pause'; requestAnimationFrame(loop); }
+      function resumeGame(){ state.paused=false; pausedOverlay.style.display='none'; pauseBtn.textContent='Pause'; state.lastFrame = performance.now(); requestAnimationFrame(loop); }
+      function togglePause(){ if(!state.running) return; state.paused = !state.paused; pausedOverlay.style.display = state.paused ? 'flex':'none'; pauseBtn.textContent = state.paused ? 'Resume':'Pause'; if(!state.paused){ state.lastFrame = performance.now(); requestAnimationFrame(loop); } }
+
+      function resetGame(){ // clear items
+        state.items.forEach(it=> it.el.remove()); state.items=[]; state.score=0; state.lives=3; state.level=1; state.speed=1; state.spawnRate=1400; updateHUD(); progressBar.style.width='0%'; }
+
+      function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+
+      function spawnItem(){
+        // Weighted spawn: more trash & recycle, fewer hazards
+        const r = Math.random();
+        let t;
+        if(r<0.45) t = types[0];
+        else if(r<0.78) t = types[1];
+        else if(r<0.95) t = types[2];
+        else t = types[3];
+
+        const el = document.createElement('div'); el.className = 'item ' + t.key; el.textContent = t.emoji;
+        const x = Math.random()*(width-80)+20; el.style.left = x + 'px'; el.style.top = '-80px';
+        sky.appendChild(el);
+        const item = {el, type:t, x, y:-80, vy:90 + Math.random()*40};
+        state.items.push(item);
+      }
+
+      function loop(now){
+        if(!state.running || state.paused) return; const dt = (now - state.lastFrame)/1000; state.lastFrame = now;
+
+        // spawn logic
+        if(now - state.lastSpawn > state.spawnRate){ spawnItem(); state.lastSpawn = now; }
+
+        // player movement by keyboard
+        if(move.left) state.playerX -= move.speed * dt;
+        if(move.right) state.playerX += move.speed * dt;
+        state.playerX = clamp(state.playerX, 8, width - playerBin.offsetWidth - 8);
+        playerBin.style.left = state.playerX + 'px';
+
+        // update items
+        for(let i = state.items.length-1; i>=0; i--){
+          const it = state.items[i]; it.y += it.vy * dt * state.speed; it.el.style.top = it.y + 'px';
+          // collision with playerBin
+          const pRect = playerBin.getBoundingClientRect(); const iRect = it.el.getBoundingClientRect();
+          const overlap = !(iRect.right < pRect.left || iRect.left > pRect.right || iRect.bottom < pRect.top || iRect.top > pRect.bottom);
+          if(overlap){ handleCatch(it); it.el.remove(); state.items.splice(i,1); continue; }
+          // hit ground
+          if(it.y > height - 160){ // ground threshold
+            handleMiss(it);
+            it.el.remove(); state.items.splice(i,1);
+          }
+        }
+
+        // progress
+        const nextScore = state.level * 200;
+        const pct = clamp((state.score / nextScore)*100, 0, 100);
+        progressBar.style.width = pct + '%';
+
+        if(state.score >= nextScore) levelUp();
+
+        updateHUD();
+        requestAnimationFrame(loop);
+      }
+
+      function handleCatch(item){
+        // hazard reduces life always
+        if(item.type.key==='hazard'){
+          state.lives -= 1; playSound('bad'); shakeScreen(); showToast('-1 life (hazard caught)');
+        } else if(item.type.key === state.playerType){
+          state.score += item.type.points; playSound('good'); spawnParticles(item.x + 26, item.y + 26, item.type.key); showToast('+'+item.type.points+' nice!');
+        } else {
+          // wrong bin
+          state.lives -= 1; state.score = Math.max(0, state.score - 8); playSound('bad'); shakeScreen(); showToast('-1 life (wrong bin)');
+        }
+
+        if(state.lives <= 0) finishGame();
+      }
+
+      function handleMiss(item){
+        // missing recyclables is bad; hazard reaching ground also bad
+        if(item.type.key==='recycle'){ state.score = Math.max(0, state.score - 5); showToast('-5 (missed recycle)'); }
+        if(item.type.key==='hazard'){ state.lives -= 1; showToast('-1 life (hazard hit ground)'); }
+        if(state.lives <=0) finishGame();
+      }
+
+      function levelUp(){ state.level++; state.speed += 0.18; state.spawnRate = Math.max(520, state.spawnRate - 120); showLevelUp(); }
+
+      // HUD
+      function updateHUD(){ scoreEl.textContent = state.score; livesEl.textContent = state.lives; levelEl.textContent = state.level; }
+
+      function finishGame(){ state.running=false; // update highscore
+        if(state.score > state.highScore){ state.highScore = state.score; localStorage.setItem('ecoHighScore', state.highScore); highScoreEl.textContent = state.highScore; }
+        showGameOver(); startBtn.textContent = 'Go Green'; }
+
+      // small UI helpers
+      function showLevelUp(){ const old = levelEl; old.classList.add('pop'); setTimeout(()=>old.classList.remove('pop'),500); }
+
+      function shakeScreen(){ gameArea.style.transform = 'translateX(-6px)'; setTimeout(()=>gameArea.style.transform='translateX(6px)',80); setTimeout(()=>gameArea.style.transform='translateX(0)',160); }
+
+      // toast messages
+      let toastTimer = null;
+      function showToast(txt){ const t = document.createElement('div'); t.textContent = txt; Object.assign(t.style,{position:'absolute',left:'50%',top:'18px',transform:'translateX(-50%)',background:'rgba(0,0,0,0.6)',padding:'8px 12px',borderRadius:'8px',zIndex:150}); gameArea.appendChild(t); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.remove(),900); }
+
+      function showGameOver(){ gameOverOverlay.style.display = 'flex'; gameOverOverlay.style.flexDirection='column'; gameOverOverlay.style.alignItems='center'; gameOverOverlay.style.justifyContent='center'; gameOverOverlay.style.pointerEvents='auto'; gameOverOverlay.innerHTML = `<div style="background:rgba(0,0,0,0.6);padding:20px;border-radius:12px;text-align:center;color:white;min-width:260px;"><h2>Game Over</h2><p style='margin:8px 0'>Score: ${state.score}</p><button id='goAgain' class='btn' style='margin-top:6px'>Play Again</button></div>`; document.getElementById('goAgain').addEventListener('click', ()=>{ gameOverOverlay.style.display='none'; resetGame(); startGame(); }); }
+
+      // particles for feedback
+      function spawnParticles(x,y,type){ for(let i=0;i<9;i++){ const p=document.createElement('div'); p.style.position='absolute'; p.style.left=(x)+'px'; p.style.top=(y)+'px'; p.style.width='8px'; p.style.height='8px'; p.style.borderRadius='50%'; p.style.zIndex=220; p.style.opacity='0.95';
+          if(type==='recycle') p.style.background='#16a34a'; else if(type==='organic') p.style.background='#f59e0b'; else p.style.background='#f59e0b';
+          sky.appendChild(p);
+          const dx=(Math.random()-0.5)*160; const dy=-Math.random()*120; p.animate([{transform:`translate(0px,0px)`, opacity:1},{transform:`translate(${dx}px,${dy}px)`, opacity:0}],{duration:700+Math.random()*300,easing:'ease-out'});
+          setTimeout(()=>p.remove(),1100);
+      } }
+
+      // simple sounds using WebAudio
+      let audioCtx = null;
+      function initAudio(){ try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { audioCtx = null; } }
+      function playSound(type){ if(!audioCtx) return; const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); if(type==='good'){ o.frequency.value = 880; g.gain.value = 0.06; o.type='sine'; } else { o.frequency.value = 220; g.gain.value = 0.08; o.type='triangle'; }
+        o.start(); g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25); setTimeout(()=>o.stop(),300);
+      }
+
+      // safe init audio on first interaction
+      window.addEventListener('pointerdown', ()=>{ if(!audioCtx) initAudio(); }, {once:true});
+
+      // start/resume/pause handlers
+      function resumeGame(){ state.paused=false; pausedOverlay.style.display='none'; pauseBtn.textContent='Pause'; state.lastFrame = performance.now(); requestAnimationFrame(loop); }
+
+      // utility to show quick level-up or messages
+      function showLevelBanner(){ /* optional small banner */ }
+
+      // initial placement
+      onResize(); setPlayerType(state.playerType);
+
+      // expose for debug
+      window.ecoGame = {state, startGame, resetGame};
+
+    })();
+  </script>
+</body>
+</html>

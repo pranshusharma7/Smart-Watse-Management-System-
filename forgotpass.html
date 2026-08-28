@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Recovery - Smart Waste Management System</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .recovery-message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(255,255,255,0.2);
+      display: none;
+    }
+    
+    .success {
+      background-color: rgba(76, 175, 80, 0.3);
+      color: #2e7d32;
+    }
+    
+    .error {
+      background-color: rgba(244, 67, 54, 0.3);
+      color: #c62828;
+    }
+    
+    .back-link {
+      margin-top: 20px;
+      color: #48b1bf;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-3d">
+    <div class="card-inner">
+      <div class="logo">
+        <span>♻</span> Password Recovery
+      </div>
+      <div class="subtitle">Enter your email to reset your password</div>
+      <div class="input-box user">
+        <input type="text" id="email" placeholder="Enter your email address">
+      </div>
+      <button class="btn login-btn" onclick="recoverPassword()">Reset Password</button>
+      <div id="recoveryMessage" class="recovery-message">
+        <!-- Message will be displayed here -->
+      </div>
+      <div class="back-link" onclick="window.location.href='index.html'">
+        ← Back to Login
+      </div>
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌙 </button>
+    </div>
+  </div>
+  
+  <script>
+    // Password recovery function
+    function recoverPassword() {
+      const email = document.getElementById('email').value.trim();
+      const messageDiv = document.getElementById('recoveryMessage');
+      
+      if (!email) {
+        messageDiv.textContent = 'Please enter your email address.';
+        messageDiv.className = 'recovery-message error';
+        messageDiv.style.display = 'block';
+        return;
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        messageDiv.textContent = 'Please enter a valid email address.';
+        messageDiv.className = 'recovery-message error';
+        messageDiv.style.display = 'block';
+        return;
+      }
+      
+      // Simulate password recovery process
+      messageDiv.textContent = `Password reset instructions have been sent to ${email}. Please check your inbox.`;
+      messageDiv.className = 'recovery-message success';
+      messageDiv.style.display = 'block';
+      
+      // Clear the input field
+      document.getElementById('email').value = '';
+    }
+    
+    // Simple dark mode toggle
+    function toggleDarkMode() {
+      if (document.documentElement.getAttribute('data-theme') === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+    
+    // Card styling (no 3D movement)
+    const card3d = document.querySelector('.card-3d');
+    const cardInner = document.querySelector('.card-inner');
+    
+    // Set static styling without 3D effects
+    if (cardInner) {
+      cardInner.style.transform = 'scale(1)';
+    }
+  </script>
+</body>
+</html>

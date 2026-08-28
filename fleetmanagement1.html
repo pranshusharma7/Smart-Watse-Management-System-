@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fleet Management Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --sidebar-bg: rgba(30, 41, 59, 0.95);
+      --sidebar-active: #38bdf8;
+      --sidebar-hover: rgba(71, 85, 105, 0.25);
+      --main-bg: linear-gradient(135deg, #abb9ea 0%, #aaccef 100%);
+      --glass-bg: rgba(255,255,255,0.85);
+      --table-header: #f1f5f9;
+      --table-row-hover: #f0f9ff;
+      --text-main: #1e293b;
+      --btn-main: #38bdf8;
+      --btn-main-hover: #0ea5e9;
+      --btn-danger: #ef4444;
+      --btn-warning: #fbbf24;
+      --btn-dark: #1e293b;
+      --btn-dark-hover: #334155;
+    }
+    body {
+      background: var(--main-bg);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .sidebar {
+      position: fixed; left: 0; top: 0; bottom: 0;
+      width: 220px; background: var(--sidebar-bg); color: #fff;
+      display: flex; flex-direction: column; z-index: 10;
+    }
+    .sidebar h2 {
+      font-size: 1.6rem; margin: 30px 0; text-align: center;
+      color: #38bdf8; font-weight: bold;
+    }
+    .sidebar nav a {
+      display: block; padding: 15px 25px;
+      text-decoration: none; color: #cbd5e1;
+      border-left: 4px solid transparent;
+      transition: 0.2s;
+    }
+    .sidebar nav a.active, .sidebar nav a:hover {
+      background: var(--sidebar-hover);
+      border-left-color: var(--sidebar-active);
+      color: #fff;
+    }
+    .sidebar-footer {
+      padding: 15px; font-size: 0.9rem; text-align: center; color: #94a3b8;
+    }
+    .main-content {
+      margin-left: 220px; padding: 30px;
+      min-height: 100vh;
+    }
+    .dashboard-header {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--glass-bg); padding: 15px 25px;
+      border-radius: 12px; margin-bottom: 30px;
+    }
+    .dashboard-header h1 { margin: 0; color: var(--text-main); }
+    .header-btns button {
+      border: none; border-radius: 6px; padding: 8px 14px;
+      font-weight: bold; cursor: pointer; color: #fff;
+    }
+    .header-btns button:hover { opacity: 0.9; }
+    .dark-btn { background: var(--btn-dark); }
+    .dark-btn:hover { background: var(--btn-dark-hover); }
+    .logout-btn { background: var(--btn-danger); }
+    .fleet-table-container {
+      background: var(--glass-bg); border-radius: 12px; padding: 20px;
+      overflow-x: auto; box-shadow: 0 3px 12px #0001;
+    }
+    .fleet-table { width: 100%; border-collapse: collapse; }
+    .fleet-table th, .fleet-table td {
+      border-bottom: 1px solid #ddd; padding: 10px;
+      text-align: left;
+    }
+    .fleet-table th { background: var(--table-header); }
+    .fleet-table tr:hover { background: var(--table-row-hover); }
+    .status { padding: 3px 8px; border-radius: 10px; font-weight: bold; }
+    .status.active { background: #bbf7d0; color: #166534; }
+    .status.inactive { background: #fee2e2; color: #991b1b; }
+    .status.maintenance { background: #fef9c3; color: #92400e; }
+    .action-btn { border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; }
+    .action-btn.edit { background: var(--btn-warning); color: #fff; }
+    .action-btn.delete { background: var(--btn-danger); color: #fff; }
+    #driverPerformance { margin-top: 30px; background: var(--glass-bg); border-radius: 12px; padding: 20px; }
+    #driverPerformance table { width: 100%; border-collapse: collapse; }
+    #driverPerformance th, #driverPerformance td { padding: 8px; border-bottom: 1px solid #ddd; }
+    /* Modals */
+    #truckModal, #aiModal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4); z-index: 2000; align-items: center; justify-content: center;
+    }
+    #truckForm, #aiModal div {
+      background: var(--glass-bg); padding: 20px; border-radius: 12px;
+      box-shadow: 0 4px 20px #0002;
+    }
+    #truckForm input, #truckForm select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Smart Waste</h2>
+    <nav>
+      <a href="index1.html">Home</a>
+      <a href="fleetmanagement.html" class="active">Fleet Management</a>
+      <a href="route.html">Route Optimisation</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+    <div class="sidebar-footer">&copy; 2025 Smart Waste Management</div>
+  </div>
+
+  <div class="main-content">
+    <div class="dashboard-header">
+      <h1>Fleet Management</h1>
+      <div class="header-btns">
+        <button onclick="openAddTruckModal()" style="background:var(--btn-main)">+ Add Truck</button>
+        <button onclick="exportCSV()" class="dark-btn">⬇ CSV</button>
+        <button onclick="exportPDF()" class="dark-btn">📑 PDF</button>
+        <button onclick="showAISuggestions()" class="dark-btn">🤖 AI</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="fleet-table-container">
+      <table class="fleet-table" id="fleetTable">
+        <thead>
+          <tr><th>Truck No.</th><th>Driver</th><th>Contact</th><th>Status</th><th>Last Location</th><th>Capacity (kg)</th><th>Last Service</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="driverPerformance">
+      <h2>Driver Performance</h2>
+      <table>
+        <thead><tr><th>Driver</th><th>Trips</th><th>Hours</th><th>Rating</th></tr></thead>
+        <tbody id="performanceTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add/Edit Truck Modal -->
+  <div id="truckModal">
+    <form id="truckForm">
+      <h2 id="modalTitle">Add Truck</h2>
+      <input type="hidden" id="editIndex">
+      <input type="text" id="truckNo" placeholder="Truck Number" required>
+      <input type="text" id="driverName" placeholder="Driver Name" required>
+      <input type="text" id="contact" placeholder="Contact" required>
+      <select id="status" required>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+      <input type="text" id="lastLocation" placeholder="Last Location" required>
+      <input type="number" id="capacity" placeholder="Capacity (kg)" required>
+      <input type="date" id="lastService" required>
+      <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+        <button type="button" onclick="closeTruckModal()">Cancel</button>
+        <button type="submit" style="background:var(--btn-main);color:#fff;">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- AI Suggestions Modal -->
+  <div id="aiModal">
+    <div>
+      <h3>🤖 AI Suggestions</h3>
+      <ul id="aiList" style="list-style:none; padding:0;"></ul>
+      <button onclick="closeAISuggestions()" style="margin-top:15px;">Close</button>
+    </div>
+  </div>
+
+<script>
+let trucks = [
+  { truckNo: "UK07AB1234", driverName: "Ravi Kumar", contact: "9876543210", status: "active", lastLocation: "Rajpur Road", capacity: 3500, lastService: "2025-08-10" },
+  { truckNo: "UK07CD5678", driverName: "Suresh Singh", contact: "9123456780", status: "maintenance", lastLocation: "ISBT", capacity: 4000, lastService: "2025-07-22" },
+  { truckNo: "UK07EF9012", driverName: "Amit Joshi", contact: "9988776655", status: "inactive", lastLocation: "Clock Tower", capacity: 3000, lastService: "2025-06-15" }
+];
+let driverStats = [
+  { name: "Ravi Kumar", trips: 120, hours: 180, rating: 4.7 },
+  { name: "Suresh Singh", trips: 95, hours: 160, rating: 4.5 },
+  { name: "Amit Joshi", trips: 80, hours: 150, rating: 4.2 }
+];
+
+function renderFleetTable(){
+  const tbody=document.querySelector("#fleetTable tbody");
+  tbody.innerHTML="";
+  trucks.forEach((t,i)=>{
+    tbody.innerHTML+=`<tr>
+      <td>${t.truckNo}</td><td>${t.driverName}</td><td>${t.contact}</td>
+      <td><span class="status ${t.status}">${t.status}</span></td>
+      <td>${t.lastLocation}</td><td>${t.capacity}</td><td>${t.lastService}</td>
+      <td>
+        <button class="action-btn edit" onclick="editTruck(${i})">Edit</button>
+        <button class="action-btn delete" onclick="deleteTruck(${i})">Delete</button>
+      </td></tr>`;
+  });
+}
+function renderPerformance(){
+  const tbody=document.getElementById("performanceTable");
+  tbody.innerHTML="";
+  driverStats.forEach(d=>{
+    tbody.innerHTML+=`<tr><td>${d.name}</td><td>${d.trips}</td><td>${d.hours} hrs</td><td>${d.rating} ⭐</td></tr>`;
+  });
+}
+function openAddTruckModal(){ document.getElementById("truckForm").reset(); document.getElementById("editIndex").value=""; document.getElementById("modalTitle").innerText="Add Truck"; document.getElementById("truckModal").style.display="flex"; }
+function closeTruckModal(){ document.getElementById("truckModal").style.display="none"; }
+function editTruck(i){ let t=trucks[i]; document.getElementById("editIndex").value=i; document.getElementById("truckNo").value=t.truckNo; document.getElementById("driverName").value=t.driverName; document.getElementById("contact").value=t.contact; document.getElementById("status").value=t.status; document.getElementById("lastLocation").value=t.lastLocation; document.getElementById("capacity").value=t.capacity; document.getElementById("lastService").value=t.lastService; document.getElementById("modalTitle").innerText="Edit Truck"; document.getElementById("truckModal").style.display="flex"; }
+function deleteTruck(i){ if(confirm("Delete this truck?")){ trucks.splice(i,1); renderFleetTable(); } }
+document.getElementById("truckForm").onsubmit=function(e){ e.preventDefault(); let i=document.getElementById("editIndex").value; let t={ truckNo:truckNo.value, driverName:driverName.value, contact:contact.value, status:status.value, lastLocation:lastLocation.value, capacity:capacity.value, lastService:lastService.value }; if(i==="") trucks.push(t); else trucks[i]=t; closeTruckModal(); renderFleetTable(); };
+
+function exportCSV(){ let csv="Truck No.,Driver,Contact,Status,Last Location,Capacity,Last Service\n"; trucks.forEach(t=>{ csv+=`${t.truckNo},${t.driverName},${t.contact},${t.status},${t.lastLocation},${t.capacity},${t.lastService}\n`; }); const blob=new Blob([csv],{type:"text/csv"}); const link=document.createElement("a"); link.href=URL.createObjectURL(blob); link.download="fleet_report.csv"; link.click(); }
+function exportPDF(){ let win=window.open(""); win.document.write("<h2>Fleet Report</h2>"+document.getElementById("fleetTable").outerHTML); win.print(); }
+
+function showAISuggestions(){ let list=document.getElementById("aiList"); list.innerHTML=""; trucks.forEach(t=>{ if(t.status==="active"&&t.capacity>3500) list.innerHTML+=`<li>✅ Use <b>${t.truckNo}</b> for high load routes near ${t.lastLocation}</li>`; else if(t.status==="maintenance") list.innerHTML+=`<li>⚠ ${t.truckNo} under maintenance</li>`; else if(t.status==="inactive") list.innerHTML+=`<li>🚫 ${t.truckNo} idle, reassign routes.</li>`; }); document.getElementById("aiModal").style.display="flex"; }
+function closeAISuggestions(){ document.getElementById("aiModal").style.display="none"; }
+function logout(){ alert("Logged out!"); }
+
+// Close modal on outside click
+window.onclick=function(e){ if(e.target.id==="truckModal") closeTruckModal(); if(e.target.id==="aiModal") closeAISuggestions(); }
+
+renderFleetTable(); renderPerformance();
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Waste Management - Modern Dashboard</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
+  <!-- Leaflet.heat CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.heat/dist/leaflet-heat.css"/>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  
+  <!-- App CSS -->
+  <link rel="stylesheet" href="style1.css"/>
+</head>
+<body>
+  <!-- Floating particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="#" class="logo">
+        <div class="logo-icon"><i class="fas fa-recycle"></i></div>
+        <span>Smart Waste</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        <a href="route.html" class="nav-item"><i class="fas fa-route"></i><span>Route Optimisation</span></a>
+        <a href="fleetmanagement.html" class="nav-item"><i class="fas fa-truck"></i><span>Fleet Management</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-dumpster"></i><span>Bin Monitoring</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-brain"></i><span>AI Predictions</span></a>
+        <a href="protect_environment_game.html" class="nav-item"><i class="fas fa-trophy"></i><span>Gamification</span></a>
+        <a href="awarness.html" class="nav-item"><i class="fas fa-lightbulb"></i><span>Awareness</span></a>
+        <a href="rewardsandpoints.html" class="nav-item"><i class="fas fa-users"></i><span>Rewards & Points</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+      </nav>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1 class="page-title"><i class="fas fa-tachometer-alt"></i> Smart Waste , Smarter Cities </h1>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="themeToggle"><i class="fas fa-moon"></i></button>
+        <div class="notification-badge">
+          <i class="fas fa-bell"></i><span class="badge-count" id="notificationCount">3</span>
+        </div>
+        <button class="btn btn-primary" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Stats Grid -->
+      <section class="stats-grid dashboard-card">
+        <div class="stat-card success">
+          <div class="stat-header"><span class="stat-title">Total Waste Collected</span><div class="stat-icon success"><i class="fas fa-trash-alt"></i></div></div>
+          <div class="stat-value" id="totalWaste">2,547</div>
+          <div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>12% from last month</span></div>
+        </div>
+
+        <div class="stat-card primary">
+          <div class="stat-header"><span class="stat-title">Active Bins</span><div class="stat-icon primary"><i class="fas fa-dumpster"></i></div></div>
+          <div class="stat-value" id="activeBins">100</div>
+          <div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>5% from last month</span></div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-header"><span class="stat-title">Fleet Efficiency</span><div class="stat-icon warning"><i class="fas fa-truck"></i></div></div>
+          <div class="stat-value" id="fleetEfficiency">87%</div>
+          <div class="stat-change positive"><i class="fas fa-arrow-up"></i><span>3% from last month</span></div>
+        </div>
+
+        <div class="stat-card danger" id="criticalAlertsCard">
+          <div class="stat-header"><span class="stat-title">Critical Alerts</span>
+            <div class="stat-icon danger"><i class="fas fa-exclamation-triangle"></i></div></div>
+          <div class="stat-value" id="criticalAlerts">3</div>
+          <div class="stat-change negative"><i class="fas fa-arrow-down"></i><span>2 less than yesterday</span></div>
+        </div>
+      </section>
+
+      <!-- Alerts & Fleet Section -->
+      <section class="content-grid">
+        <div class="content-card dashboard-card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-bell"></i> Recent Alerts</h2>
+            <button class="btn btn-secondary" id="clearAlerts"><i class="fas fa-broom"></i></button>
+          </div>
+          <div class="alerts-list" id="alertsList">
+            <div class="alert-item"><div class="alert-icon critical"><i class="fas fa-exclamation"></i></div><div class="alert-content"><div class="alert-title">Bin Overflow</div><div class="alert-message">Sector A bin at 95% capacity</div></div><div class="alert-time">5m ago</div></div>
+            <div class="alert-item"><div class="alert-icon warning"><i class="fas fa-tools"></i></div><div class="alert-content"><div class="alert-title">Maintenance Due</div><div class="alert-message">Vehicle #103 needs service</div></div><div class="alert-time">2h ago</div></div>
+            <div class="alert-item"><div class="alert-icon info"><i class="fas fa-check-circle"></i></div><div class="alert-content"><div class="alert-title">Route Completed</div><div class="alert-message">Truck #5 finished collection</div></div><div class="alert-time">4h ago</div></div>
+          </div>
+        </div>
+
+        <div class="content-card dashboard-card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-truck"></i> Fleet Status</h2>
+            <button class="btn btn-secondary" id="addVehicle"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="fleet-list" id="fleetList">
+            <div class="fleet-item"><div class="fleet-info"><div class="fleet-icon"><i class="fas fa-truck"></i></div><div class="fleet-details"><h4>Truck #103</h4><div class="fleet-status"><span class="status-dot active"></span><span>Active - On Route</span></div></div></div><button class="btn btn-secondary" data-track="103"><i class="fas fa-location-dot"></i></button></div>
+            <div class="fleet-item"><div class="fleet-info"><div class="fleet-icon"><i class="fas fa-truck"></i></div><div class="fleet-details"><h4>Truck #205</h4><div class="fleet-status"><span class="status-dot maintenance"></span><span>Maintenance</span></div></div></div><button class="btn btn-secondary" data-track="205"><i class="fas fa-location-dot"></i></button></div>
+            <div class="fleet-item"><div class="fleet-info"><div class="fleet-icon"><i class="fas fa-truck"></i></div><div class="fleet-details"><h4>Truck #118</h4><div class="fleet-status"><span class="status-dot inactive"></span><span>Inactive - Depot</span></div></div></div><button class="btn btn-secondary" data-track="118"><i class="fas fa-location-dot"></i></button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics Section -->
+      <section class="content-grid">
+        <div class="content-card dashboard-card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-chart-line"></i> Collection Analytics</h2>
+            <div class="header-actions">
+              <button class="btn btn-secondary" id="weekBtn">Week</button>
+              <button class="btn btn-secondary active" id="monthBtn">Month</button>
+              <button class="btn btn-secondary" id="yearBtn">Year</button>
+            </div>
+          </div>
+          <div class="chart-container"><canvas id="analyticsChart"></canvas></div>
+        </div>
+
+         <!-- Bin Monitoring Section -->
+      <section id="bin-monitoring" class="dashboard-card">
+        <h2><i class="fas fa-trash"></i> Bin Monitoring</h2>
+        <div class="bin-container">
+          <div class="bin-card" id="bin1">
+            <div class="bin-header">
+              <i class="fas fa-dumpster"></i>
+              <h3>Bin #1 - Market Street</h3>
+            </div>
+            <div class="bin-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:65%"></div>
+              </div>
+              <span class="fill-level">65%</span>
+            </div>
+            <p>Status: <span class="status"></span></p>
+            <p class="last-updated">Last updated: just now</p>
+          </div>
+          <div class="bin-card" id="bin2">
+            <div class="bin-header">
+              <i class="fas fa-dumpster"></i>
+              <h3>Bin #2 - University Road</h3>
+            </div>
+            <div class="bin-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:20%"></div>
+              </div>
+              <span class="fill-level">20%</span>
+            </div>
+            <p>Status: <span class="status"></span></p>
+            <p class="last-updated">Last updated: just now</p>
+          </div>
+          <div class="bin-card" id="bin3">
+            <div class="bin-header">
+              <i class="fas fa-dumpster"></i>
+              <h3>Bin #3 - Railway Station</h3>
+            </div>
+            <div class="bin-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:90%"></div>
+              </div>
+              <span class="fill-level">90%</span>
+            </div>
+            <p>Status: <span class="status"></span></p>
+            <p class="last-updated">Last updated: just now</p>
+          </div>
+        </div>
+      </section>
+
+
+  <!-- Vendor Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.3.0/dist/tf.min.js"></script>
+
+  <!-- App JS -->
+  <script src="script1.js"></script>
+<script src="liveupdates.js"></script>
+
+</body>
+</html>

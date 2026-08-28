@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fleet Management Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dashboard UI Styles -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --sidebar-bg: rgba(30, 41, 59, 0.95);
+            --sidebar-active: #38bdf8;
+            --sidebar-hover: rgba(71, 85, 105, 0.25);
+            --main-bg: linear-gradient(135deg, #abb9ea 0%, #aaccef 100%);
+            --glass-bg: rgba(255,255,255,0.85);
+            --glass-dark: rgba(30,41,59,0.92);
+            --table-header: #f1f5f9;
+            --table-header-dark: #1e293b;
+            --table-row-hover: #f0f9ff;
+            --table-row-hover-dark: #334155;
+            --text-main: #1e293b;
+            --text-main-dark: #f1f5f9;
+            --btn-main: #38bdf8;
+            --btn-main-hover: #0ea5e9;
+            --btn-danger: #ef4444;
+            --btn-warning: #fbbf24;
+            --btn-dark: #1e293b;
+            --btn-dark-hover: #334155;
+        }
+        body {
+            background: var(--main-bg);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background 0.4s;
+           
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0; bottom: 0;
+            width: 220px;
+            background: var(--sidebar-bg);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: 2px 0 12px rgba(30,41,59,0.08);
+            transition: background 0.3s;
+        }
+        .sidebar h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin: 36px 0 28px 0;
+            text-align: center;
+            letter-spacing: 1.5px;
+            color: #38bdf8;
+            text-shadow: 0 2px 12px #1e293b33;
+        }
+        .sidebar nav {
+            flex: 1;
+        }
+        .sidebar nav a {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 16px 32px;
+            font-size: 1.13rem;
+            border-left: 4px solid transparent;
+            border-radius: 0 18px 18px 0;
+            margin: 2px 0;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .sidebar nav a.active, .sidebar nav a:hover {
+            background: var(--sidebar-hover);
+            border-left: 4px solid var(--sidebar-active);
+            color: #fff;
+        }
+        .sidebar .sidebar-footer {
+            padding: 18px 0;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #94a3b8;
+            border-top: 1px solid #33415544;
+        }
+        .main-content {
+            margin-left: 220px;
+            padding: 38px 44px;
+            min-height: 100vh;
+            transition: background 0.4s, color 0.4s;
+        }
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 36px;
+            background: var(--glass-bg);
+            border-radius: 18px;
+            box-shadow: 0 2px 16px #1e293b11;
+            padding: 18px 28px;
+            transition: background 0.4s, color 0.4s;
+        }
+        .dashboard-header h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 12px #1e293b11;
+            transition: color 0.4s;
+        }
+        .dashboard-header .header-btns {
+            display: flex; gap: 14px; align-items: center;
+        }
+        .dashboard-header button, .dashboard-header .add-btn {
+            background: var(--btn-main);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #38bdf822;
+            transition: background 0.2s, color 0.2s;
+        }
+        .dashboard-header .add-btn:hover { background: var(--btn-main-hover);}
+        .dashboard-header .dark-btn {
+            background: var(--btn-dark);
+            color: #fff;
+        }
+        .dashboard-header .dark-btn:hover { background: var(--btn-dark-hover);}
+        .dashboard-header .logout-btn {
+            background: var(--btn-danger);
+        }
+        .dashboard-header .logout-btn:hover { background: #b91c1c;}
+        .fleet-table-container {
+            background: var(--glass-bg);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #1e293b11;
+            padding: 28px 24px;
+            overflow-x: auto;
+            transition: background 0.4s, color 0.4s;
+        }
+        .fleet-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+        .fleet-table th, .fleet-table td {
+            padding: 14px 12px;
+            text-align: left;
+        }
+        .fleet-table th {
+            background: var(--table-header);
+            color: #334155;
+            font-size: 1.08rem;
+            font-weight: 700;
+            border-bottom: 2px solid #e2e8f0;
+            transition: background 0.4s, color 0.4s;
+        }
+        .fleet-table tr {
+            transition: background 0.15s;
+        }
+        .fleet-table tr:hover {
+            background: var(--table-row-hover);
+        }
+        .fleet-table td {
+            color: #475569;
+            font-size: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.4s, color 0.4s;
+        }
+        .status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.98rem;
+            display: inline-block;
+        }
+        .status.active { background: #bbf7d0; color: #166534; }
+        .status.inactive { background: #fee2e2; color: #991b1b; }
+        .status.maintenance { background: #fef9c3; color: #92400e; }
+        .action-btn {
+            border: none;
+            border-radius: 5px;
+            padding: 5px 12px;
+            font-weight: 600;
+            font-size: 0.98rem;
+            cursor: pointer;
+            margin-right: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .action-btn.edit { background: var(--btn-warning); color: #fff;}
+        .action-btn.edit:hover { background: #d97706;}
+        .action-btn.delete { background: var(--btn-danger); color: #fff;}
+        .action-btn.delete:hover { background: #b91c1c;}
+        @media (max-width: 900px) {
+            .main-content { padding: 24px 8px; }
+            .fleet-table-container { padding: 12px 2px; }
+            .dashboard-header { padding: 12px 8px; }
+        }
+        @media (max-width: 600px) {
+            .sidebar { width: 60px; }
+            .sidebar h2 { display: none; }
+            .sidebar nav a { padding: 12px 10px; font-size: 0.95rem; }
+            .main-content { margin-left: 60px; }
+        }
+        /* Modal styles */
+        #truckModal {
+            display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
+            background:rgba(30,41,59,0.25); z-index:1000;
+            align-items:center; justify-content:center;
+        }
+        #truckForm {
+            background: var(--glass-bg);
+            border-radius:16px;
+            padding:32px 24px;
+            min-width:320px;
+            box-shadow:0 8px 32px #1e293b22;
+            display:flex; flex-direction:column; gap:18px;
+            transition: background 0.4s, color 0.4s;
+        }
+        #truckForm input, #truckForm select {
+            padding: 10px 12px;
+            border-radius: 7px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+            outline: none;
+            background: #f8fafc;
+            color: #1e293b;
+            transition: background 0.3s, color 0.3s;
+        }
+        #truckForm input:focus, #truckForm select:focus {
+            border-color: #38bdf8;
+            background: #e0f2fe;
+        }
+        #truckForm h2 {
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        #truckForm button[type="submit"] {
+            background: var(--btn-main);
+            color: #fff;
+        }
+        #truckForm button[type="submit"]:hover {
+            background: var(--btn-main-hover);
+        }
+        #truckForm button[type="button"] {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        #truckForm button[type="button"]:hover {
+            background: #cbd5e1;
+        }
+        /* Dark mode styles */
+        body.dark {
+            --sidebar-bg: rgba(30, 41, 59, 0.99);
+            --sidebar-hover: #334155;
+            --main-bg: linear-gradient(135deg, #232946 0%, #1e293b 100%);
+            --glass-bg: var(--glass-dark);
+            --table-header: var(--table-header-dark);
+            --table-row-hover: var(--table-row-hover-dark);
+            --text-main: #f1f5f9;
+        }
+        body.dark, body.dark .dashboard-header, body.dark .fleet-table-container, body.dark #truckForm {
+            color: #f1f5f9;
+        }
+        body.dark .dashboard-header h1, body.dark #truckForm h2 {
+            color: #f1f5f9;
+        }
+        body.dark .fleet-table th, body.dark .fleet-table td {
+            color: #f1f5f9;
+        }
+        body.dark .fleet-table th {
+            background: var(--table-header-dark);
+        }
+        body.dark .fleet-table tr:hover {
+            background: var(--table-row-hover-dark);
+        }
+        body.dark #truckForm input, body.dark #truckForm select {
+            background: #232946;
+            color: #f1f5f9;
+            border-color: #475569;
+        }
+        body.dark #truckForm input:focus, body.dark #truckForm select:focus {
+            background: #334155;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Smart Waste</h2>
+        <nav>
+            <a href="index1.html">Home</a>
+            <a href="fleetmanagement.html" class="active">Fleet Management</a>
+            <a href="route.html">Route Optimisation</a>
+            <a href="settings.html">Settings</a>
+        </nav>
+        <div class="sidebar-footer">
+            &copy; 2025 Smart Waste Management
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h1>Fleet Management</h1>
+            <div class="header-btns">
+                <button class="add-btn" onclick="openAddTruckModal()">+ Add Truck</button>
+                <button id="darkModeBtn" class="dark-btn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="fleet-table-container">
+            <table class="fleet-table" id="fleetTable">
+                <thead>
+                    <tr>
+                        <th>Truck No.</th>
+                        <th>Driver Name</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Last Location</th>
+                        <th>Capacity (kg)</th>
+                        <th>Last Service</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Truck rows will be injected by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Truck Modal (hidden by default) -->
+    <div id="truckModal">
+        <form id="truckForm">
+            <h2 id="modalTitle">Add Truck</h2>
+            <input type="hidden" id="editIndex">
+            <input type="text" id="truckNo" placeholder="Truck Number" required>
+            <input type="text" id="driverName" placeholder="Driver Name" required>
+            <input type="text" id="contact" placeholder="Contact" required>
+            <select id="status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="maintenance">Maintenance</option>
+            </select>
+            <input type="text" id="lastLocation" placeholder="Last Location" required>
+            <input type="number" id="capacity" placeholder="Capacity (kg)" required>
+            <input type="date" id="lastService" required>
+            <div style="display:flex; gap:12px; justify-content:flex-end;">
+                <button type="button" onclick="closeTruckModal()">Cancel</button>
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Sample truck data
+        let trucks = [
+            {
+                truckNo: "UK07AB1234",
+                driverName: "Ravi Kumar",
+                contact: "9876543210",
+                status: "active",
+                lastLocation: "Rajpur Road",
+                capacity: 3500,
+                lastService: "2025-08-10"
+            },
+            {
+                truckNo: "UK07CD5678",
+                driverName: "Suresh Singh",
+                contact: "9123456780",
+                status: "maintenance",
+                lastLocation: "ISBT",
+                capacity: 4000,
+                lastService: "2025-07-22"
+            },
+            {
+                truckNo: "UK07EF9012",
+                driverName: "Amit Joshi",
+                contact: "9988776655",
+                status: "inactive",
+                lastLocation: "Clock Tower",
+                capacity: 3000,
+                lastService: "2025-06-15"
+            }
+        ];
+
+        function renderFleetTable() {
+            const tbody = document.querySelector("#fleetTable tbody");
+            tbody.innerHTML = "";
+            trucks.forEach((truck, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${truck.truckNo}</td>
+                        <td>${truck.driverName}</td>
+                        <td>${truck.contact}</td>
+                        <td><span class="status ${truck.status}">${capitalize(truck.status)}</span></td>
+                        <td>${truck.lastLocation}</td>
+                        <td>${truck.capacity}</td>
+                        <td>${truck.lastService}</td>
+                        <td>
+                            <button class="action-btn edit" onclick="editTruck(${idx})">Edit</button>
+                            <button class="action-btn delete" onclick="deleteTruck(${idx})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function openAddTruckModal() {
+            document.getElementById("truckForm").reset();
+            document.getElementById("editIndex").value = "";
+            document.getElementById("modalTitle").innerText = "Add Truck";
+            document.getElementById("truckModal").style.display = "flex";
+        }
+
+        function closeTruckModal() {
+            document.getElementById("truckModal").style.display = "none";
+        }
+
+        function editTruck(idx) {
+            const truck = trucks[idx];
+            document.getElementById("editIndex").value = idx;
+            document.getElementById("truckNo").value = truck.truckNo;
+            document.getElementById("driverName").value = truck.driverName;
+            document.getElementById("contact").value = truck.contact;
+            document.getElementById("status").value = truck.status;
+            document.getElementById("lastLocation").value = truck.lastLocation;
+            document.getElementById("capacity").value = truck.capacity;
+            document.getElementById("lastService").value = truck.lastService;
+            document.getElementById("modalTitle").innerText = "Edit Truck";
+            document.getElementById("truckModal").style.display = "flex";
+        }
+
+        function deleteTruck(idx) {
+            if (confirm("Are you sure you want to delete this truck?")) {
+                trucks.splice(idx, 1);
+                renderFleetTable();
+            }
+        }
+
+        document.getElementById("truckForm").onsubmit = function(e) {
+            e.preventDefault();
+            const idx = document.getElementById("editIndex").value;
+            const truck = {
+                truckNo: document.getElementById("truckNo").value,
+                driverName: document.getElementById("driverName").value,
+                contact: document.getElementById("contact").value,
+                status: document.getElementById("status").value,
+                lastLocation: document.getElementById("lastLocation").value,
+                capacity: document.getElementById("capacity").value,
+                lastService: document.getElementById("lastService").value
+            };
+            if (idx === "") {
+                trucks.push(truck);
+            } else {
+                trucks[idx] = truck;
+            }
+            closeTruckModal();
+            renderFleetTable();
+        };
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById("truckModal");
+            if (event.target === modal) {
+                closeTruckModal();
+            }
+        };
+
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const btn = document.getElementById('darkModeBtn');
+            if(document.body.classList.contains('dark')) {
+                btn.innerHTML = "☀️ Light Mode";
+            } else {
+                btn.innerHTML = "🌙 Dark Mode";
+            }
+        }
+
+        // Logout button
+        function logout() {
+            if(confirm("Are you sure you want to logout?")) {
+                window.location.href = "index.html";
+            }
+        }
+
+        // Initial render
+        renderFleetTable();
+    </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Smart Waste Management System</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .social-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .social-btn {
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       padding: 12px;
+       border-radius: 20px;
+       border: none;
+       font-weight: 600;
+       cursor: pointer;
+       transition: 0.3s;
+       color: white;
+       gap: 12px;
+       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+     }
+    
+    .google-btn {
+      background-color: #DB4437;
+    }
+    
+    .google-btn:hover {
+      background-color: #c53929;
+    }
+
+    .facebook-btn {
+      background-color: #4267B2;
+    }
+    
+    .facebook-btn:hover {
+      background-color: #365899;
+    }
+
+    .x-btn {
+      background-color: #000000;
+    }
+    
+    .x-btn:hover {
+      background-color: #333333;
+    }
+    
+    .social-btn:hover {
+      opacity: 0.9;
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+    
+    .divider::before {
+      margin-right: 10px;
+    }
+    
+    .divider::after {
+      margin-left: 10px;
+    }
+    
+    .signup-message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(255,255,255,0.2);
+      display: none;
+    }
+    
+    .success {
+      background-color: rgba(76, 175, 80, 0.3);
+      color: #2e7d32;
+    }
+    
+    .error {
+      background-color: rgba(244, 67, 54, 0.3);
+      color: #c62828;
+    }
+    
+    .loading {
+      background-color: rgba(33, 150, 243, 0.3);
+      color: #1565c0;
+    }
+    
+    /* Loading spinner animation */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .back-link {
+      margin-top: 20px;
+      color: #48b1bf;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-3d">
+    <div class="card-inner">
+      <div class="logo">
+        <span>♻</span> Sign Up
+      </div>
+      <div class="subtitle">Create your waste management account</div>
+      
+      <!-- Email Signup Form -->
+      <div class="input-box user">
+        <input type="text" id="email" placeholder="Enter your email address">
+      </div>
+      <div class="input-box pass">
+        <input type="password" id="password" placeholder="Create a password">
+      </div>
+      <div class="input-box pass">
+        <input type="password" id="confirmPassword" placeholder="Confirm your password">
+      </div>
+      <button class="btn login-btn" onclick="signupWithEmail()">Sign Up</button>
+      
+      <!-- Divider -->
+      <div class="divider">OR</div>
+      
+      <!-- Social Media Signup Buttons -->
+       <div class="social-buttons">
+         <button class="social-btn google-btn" onclick="signupWithGoogle()">
+           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+             <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+           </svg>
+           Sign up with Google
+         </button>
+         <button class="social-btn facebook-btn" onclick="signupWithFacebook()">
+           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+             <path d="M20.9,2H3.1C2.5,2,2,2.5,2,3.1v17.8C2,21.5,2.5,22,3.1,22h9.6v-7.7h-2.6v-3h2.6V9.2c0-2.6,1.6-4,3.9-4c1.1,0,2.1,0.1,2.3,0.1v2.7h-1.6c-1.3,0-1.5,0.6-1.5,1.5v1.9h3l-0.4,3h-2.6V22h5.1c0.6,0,1.1-0.5,1.1-1.1V3.1C22,2.5,21.5,2,20.9,2z"/>
+           </svg>
+           Sign up with Facebook
+         </button>
+         <button class="social-btn x-btn" onclick="signupWithX()">
+           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+           </svg>
+           Sign up with X
+         </button>
+       </div>
+      
+      <div id="signupMessage" class="signup-message">
+        <!-- Message will be displayed here -->
+      </div>
+      
+      <div class="back-link" onclick="window.location.href='index.html'">
+        ← Already have an account? Log in
+      </div>
+      
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+    </div>
+  </div>
+  
+  <script>
+    // Email signup function
+    function signupWithEmail() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const messageEl = document.getElementById('signupMessage');
+      
+      // Validate inputs
+      if (!email || !password || !confirmPassword) {
+        messageEl.innerHTML = '⚠️ Please fill in all fields';
+        messageEl.className = 'signup-message error';
+        messageEl.style.display = 'block';
+        return;
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        messageEl.innerHTML = '⚠️ Please enter a valid email address';
+        messageEl.className = 'signup-message error';
+        messageEl.style.display = 'block';
+        return;
+      }
+      
+      // Password match validation
+      if (password !== confirmPassword) {
+        messageEl.innerHTML = '⚠️ Passwords do not match';
+        messageEl.className = 'signup-message error';
+        messageEl.style.display = 'block';
+        return;
+      }
+      
+      // Password strength validation (simple example)
+      if (password.length < 8) {
+        messageEl.innerHTML = '⚠️ Password must be at least 8 characters long';
+        messageEl.className = 'signup-message error';
+        messageEl.style.display = 'block';
+        return;
+      }
+      
+      // Simulate signup process
+      messageEl.innerHTML = '<div class="loading-spinner"></div> Creating your account...';
+      messageEl.className = 'signup-message loading';
+      messageEl.style.display = 'block';
+      
+      // Call real backend signup API
+      fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, name: email.split('@')[0] })
+      })
+      .then(async (res) => {
+        const data = await res.json().catch(()=>({}));
+        if (!res.ok) throw new Error(data.error || 'Signup failed');
+        messageEl.innerHTML = '✅ Account created successfully! Redirecting to dashboard...';
+        messageEl.className = 'signup-message success';
+        try { sessionStorage.setItem('swms_user', JSON.stringify(data.user)); } catch(e) {}
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+      })
+      .catch(err => {
+        messageEl.innerHTML = '❌ ' + (err.message || 'Signup failed');
+        messageEl.className = 'signup-message error';
+      });
+    }
+    
+    // Social media signup functions
+    function signupWithGoogle() {
+      const messageEl = document.getElementById('signupMessage');
+      messageEl.innerHTML = '<div class="loading-spinner"></div> Connecting to Google...';
+      messageEl.style.display = 'block';
+      messageEl.className = 'signup-message loading';
+      
+      // Simulate API call
+      setTimeout(() => {
+        messageEl.innerHTML = '✅ Successfully signed up with Google! Redirecting to dashboard...';
+        messageEl.className = 'signup-message success';
+        
+        // Simulate redirect to dashboard
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+      }, 1500);
+    }
+
+    function signupWithFacebook() {
+      const messageEl = document.getElementById('signupMessage');
+      messageEl.innerHTML = '<div class="loading-spinner"></div> Connecting to Facebook...';
+      messageEl.style.display = 'block';
+      messageEl.className = 'signup-message loading';
+      
+      // Simulate API call
+      setTimeout(() => {
+        messageEl.innerHTML = '✅ Successfully signed up with Facebook! Redirecting to dashboard...';
+        messageEl.className = 'signup-message success';
+        
+        // Simulate redirect to dashboard
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+      }, 1500);
+    }
+
+    function signupWithX() {
+      const messageEl = document.getElementById('signupMessage');
+      messageEl.innerHTML = '<div class="loading-spinner"></div> Connecting to X...';
+      messageEl.style.display = 'block';
+      messageEl.className = 'signup-message loading';
+      
+      // Simulate API call
+      setTimeout(() => {
+        messageEl.innerHTML = '✅ Successfully signed up with X! Redirecting to dashboard...';
+        messageEl.className = 'signup-message success';
+        
+        // Simulate redirect to dashboard
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+      }, 1500);
+    }
+    
+    // Simple dark mode toggle
+    function toggleDarkMode() {
+      if (document.documentElement.getAttribute('data-theme') === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
+    
+    // Card styling (no 3D movement)
+    const card3d = document.querySelector('.card-3d');
+    const cardInner = document.querySelector('.card-inner');
+    
+    // Set static styling without 3D effects
+    if (cardInner) {
+      cardInner.style.transform = 'scale(1)';
+    }
+  </script>
+</body>
+</html>

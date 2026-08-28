@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Municipality Rewards & Points Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Reset & Base */
+* {margin:0; padding:0; box-sizing:border-box;}
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0b0f17, #1b1634, #080f13);
+    color: #fff;
+}
+
+/* Dashboard container */
+.dashboard {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+    position: relative;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+header h1 {
+    font-weight: 600;
+    font-size: 2rem;
+    color: #00ffcc;
+    text-shadow: 1px 1px 10px #00ffcc;
+}
+header input {
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+    width: 250px;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+header input::placeholder {color:#ccc;}
+
+/* Notification Bell */
+.notification {
+    position: relative;
+    margin-left: 20px;
+    cursor: pointer;
+    font-size: 1.8rem;
+    color: #00ffcc;
+}
+.notification .badge-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: #ff4d6d;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background: rgba(0,0,0,0.9);
+    border-radius: 12px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 5px 20px rgba(0,255,204,0.3);
+    z-index: 100;
+}
+.dropdown.active {display:block;}
+.dropdown p {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.95rem;
+}
+.dropdown p:hover {background: rgba(0,255,204,0.2); cursor:pointer;}
+
+/* Table Styles */
+.table-container {overflow-x:auto;}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 15px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+}
+th, td {
+    padding: 15px 20px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+th {
+    background: rgba(255,255,255,0.1);
+    color: #00ffcc;
+    text-transform: uppercase;
+}
+tr:nth-child(even) {background: rgba(255,255,255,0.03);}
+tr:hover {background: rgba(0,255,204,0.1);}
+
+/* Progress Bar */
+.progress {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    height: 15px;
+    width: 100%;
+    overflow: hidden;
+}
+.progress div {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg,#00ffcc,#00aaff);
+    animation: fill 2s ease forwards;
+    width: 0;
+}
+@keyframes fill {100% {width: var(--width);} }
+
+/* Status badges */
+.status {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.status.completed {background:#00ffcc; color:#0f2027;}
+.status.pending {background:#ff4d6d; color:#fff;}
+.status.inprogress {background:#ffd700; color:#0f2027;}
+
+/* Futuristic Badges */
+.badge {
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:12px;
+    background:linear-gradient(45deg,#ff6ec7,#00ffcc);
+    color:#0f2027;
+    font-weight:600;
+    margin-left:10px;
+    box-shadow:0 4px 15px rgba(0,255,204,0.5);
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%,100% {transform:scale(1);}
+    50% {transform:scale(1.1);}
+}
+
+/* Tooltip */
+td[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    transform: translate(-50%, -120%);
+}
+
+/* Admin Action Button */
+.admin-btn {
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: linear-gradient(45deg,#00ffcc,#00aaff);
+    color: #0f2027;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+}
+.admin-btn:hover {
+    box-shadow: 0 0 15px #00ffcc, 0 0 25px #00aaff;
+}
+
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <h1> Rewards & Points </h1>
+        <div style="display:flex;align-items:center;">
+            <input type="text" id="searchInput" placeholder="Search by Name or Reward...">
+            <div class="notification" onclick="toggleDropdown()">
+                🔔
+                <span class="badge-count" id="notifCount">3</span>
+                <div class="dropdown" id="notifDropdown">
+                    <p>New reward claimed by Tom</p>
+                    <p>Points updated for Alice</p>
+                    <p>Bob reward is pending</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="table-container">
+        <table id="pointsTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Name</th>
+                    <th onclick="sortTable(1)">Points</th>
+                    <th onclick="sortTable(2)">Reward</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td title="Employee ID: 001">PRANSHU SHARMA </td>
+                    <td>30000</td>
+                    <td title="Gift card worth $50">Gift Card</td>
+                    <td><div class="progress"><div style="--width:60%"></div></div></td>
+                    <td><span class="status completed">Completed</span></td>
+                    <td><button class="admin-btn" onclick="markIssued(this)">Mark Issued</button></td>
+                </tr>
+                <tr>
+                    <td title="Employee ID: 002">PRAKHAR SHARMA</td>
+                    <td>15000</td>
+                    <td title="Discount 20%">Discount Coupon</td>
+                    <td><div class="progress"><div style="--width:40%"></div></div></td>
+                    <td><span class="status inprogress">In Progress</span></td>
+                    <td><button class="admin-btn" onclick="markIssued(this)">Mark Issued</button></td>
+                </tr>
+                <tr>
+                    <td title="Employee ID: 003">PRAKRITI SINGH RAJPUT</td>
+                    <td>5000</td>
+                    <td title="Free meal voucher">Free Meal</td>
+                    <td><div class="progress"><div style="--width:25%"></div></div></td>
+                    <td><span class="status pending">Pending</span></td>
+                    <td><button class="admin-btn" onclick="markIssued(this)">Mark Issued</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// Search Functionality
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('keyup', function() {
+    const filter = searchInput.value.toLowerCase();
+    const rows = document.querySelectorAll('#pointsTable tbody tr');
+    rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const reward = row.cells[2].textContent.toLowerCase();
+        row.style.display = (name.includes(filter) || reward.includes(filter)) ? '' : 'none';
+    });
+});
+
+// Sort Table
+function sortTable(n) {
+    let table = document.getElementById("pointsTable");
+    let rows = Array.from(table.rows).slice(1);
+    let asc = table.asc = !table.asc;
+
+    rows.sort((a,b)=>{
+        let x = a.cells[n].textContent;
+        let y = b.cells[n].textContent;
+        if(!isNaN(x) && !isNaN(y)) return asc ? x-y : y-x;
+        return asc ? x.localeCompare(y) : y.localeCompare(x);
+    });
+
+    rows.forEach(row => table.tBodies[0].appendChild(row));
+}
+
+// Notification Dropdown
+function toggleDropdown() {
+    document.getElementById('notifDropdown').classList.toggle('active');
+}
+
+// Admin Mark Issued
+function markIssued(btn) {
+    const row = btn.closest('tr');
+    const status = row.querySelector('.status');
+    status.textContent = 'Completed';
+    status.className = 'status completed';
+    alert('Reward marked as issued!');
+}
+</script>
+
+</body>
+</html>
